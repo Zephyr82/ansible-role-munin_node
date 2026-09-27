@@ -1,0 +1,112 @@
+---
+
+- name: Include OS specific variables
+  ansible.builtin.include_vars:
+    file: "{{ item }}"
+  with_first_found:
+    - "os_{{ ansible_facts['os_family'] }}.yml"
+    - "dist_{{ ansible_facts['distribution'] }}.yml"
+    - "os_default.yml"
+  tags:
+    - always
+
+- name: Include OS specific installation tasks
+  ansible.builtin.include_tasks:
+    file: "{{ item }}"
+  with_first_found:
+    - "installation/{{ ansible_facts['os_family'] }}.yml"
+    - installation/default.yml
+  tags:
+    - installation
+
+- name: Ensure config directories exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items:
+    - '{{ munin_node_plugin_conf_dir }}'
+    - '{{ munin_node_plugin_enabled_dir }}'
+
+- name: Set munin-node configuration
+  ansible.builtin.template:
+    src: munin-node.conf.j2
+    dest: "{{ munin_node_conf_dir }}"
+    owner: root
+    group: "{{ munin_node_conf_dir_group }}"
+    mode: "0644"
+  become: true
+  notify: restart munin-node
+
+- name: Get list of enabled munin plugins
+  ansible.builtin.find:
+    paths: "{{ munin_node_plugin_enabled_dir.path }}"
+    file_type: "any"
+  register: munin_node_enabled_plugins
+
+- name: Show list of enabled munin plugins
+  ansible.builtin.debug:
+    msg: "{{ item.path }}"
+  loop: "{{ munin_node_enabled_plugins.files }}"
+  tags:
+    - debug
+
+- name: Make list of basefile names from munin_node_plugins for later usage
+  ansible.builtin.set_fact:
+    _munin_node_plugins: "{{ munin_node_plugins | map(attribute='name') | join(',') }}"
+
+- name: Show the names of the plugins which shall be enabled
+  ansible.builtin.debug:
+    msg: "{{ _munin_node_plugins }}"
+  tags:
+    - debug
+
+- name: Generate list of plugins to disable
+  ansible.builtin.find:
+    path: /etc/munin/plugins
+    file_type: link
+    exclude: "{{ _munin_node_plugins }}"
+  register: _munin_node_plugins_disable
+
+- name: Show contents of variable _munin_node_plugins_disable to verify which plugins are going to be deleted
+  ansible.builtin.debug:
+    msg: "_munin_node_plugins_disable: {{ item.path }}"
+  loop: "{{ _munin_node_plugins_disable['files'] }}"
+  tags:
+    - debug
+
+- name: Disable the plugins we do not want/need
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  become: true
+  loop: "{{ _munin_node_plugins_disable['files'] }}"
+
+- name: Show the plugins specified in munin_node_plugins and their computed full paths.
+  ansible.builtin.debug:
+    msg:
+      - "dest: {{ munin_node_plugin_enabled_dir.path }}{{ item.name }}"
+      - "src: {% if item.plugin_path is defined %}{{ item.plugin_path }}{% else %}{{ munin_node_plugin_dir }}{{ item.name }}{% endif %}"
+  with_items: "{{ munin_node_plugins }}"
+  tags:
+    - debug
+
+- name: Enable plugins we do want/need
+  ansible.builtin.file:
+    dest: "{{ munin_node_plugin_enabled_dir.path }}{{ item.name }}"
+    src: "{% if item.plugin_path is defined %}{{ item.plugin_path }}{% else %}{{ munin_node_plugin_dir }}{{ item.name }}{% endif %}"
+    owner: root
+    group: root
+    state: link
+  with_items: "{{ munin_node_plugins }}"
+  become: true
+  notify: restart munin-node
+
+- name: Ensure munin-node is running
+  ansible.builtin.service:
+    name: 'munin-node'
+    state: started
+    enabled: true
+  become: true

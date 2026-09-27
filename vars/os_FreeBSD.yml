@@ -1,0 +1,14 @@
+---
+#####
+# munin config directories
+munin_node_plugin_conf_dir: '/usr/local/etc/munin/plugin-conf.d'
+munin_node_conf_dir: '/usr/local/etc/munin'
+munin_node_conf_dir_group: 'wheel'
+munin_node_plugin_conf_dir_group: 'wheel'
+
+#####
+# Source and destination of munin plugin files
+munin_node_plugin_dir: '/usr/local/share/munin/plugins'
+munin_node_plugin_enabled_dir: '/usr/local/etc/munin/plugins'
+
+munin_node_group: 'wheel'

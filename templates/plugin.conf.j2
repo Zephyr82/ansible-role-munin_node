@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+{% if munin_node_config|length %}
+{% for section, directives in munin_node_config.items() | list %}
+[{{section}}]
+{% for name, value in directives.items() | list %}
+{{ name }} {{ value }}
+{% endfor %}
+
+{% endfor %}
+{% endif %}

@@ -1,0 +1,57 @@
+---
+# Using * can lead to ipv6 listening only, therefor use 0.0.0.0
+
+### defaults for the munin-node.conf file
+
+munin_node_log_level: '4'
+munin_node_log_file: '/var/log/munin/munin-node.log'
+munin_node_pid_file: '/var/run/munin/munin-node.pid'
+
+munin_node_background: '1'
+munin_node_setsid: '1'
+
+munin_node_user: 'root'
+munin_node_group: 'root'
+
+munin_node_global_timeout:
+
+munin_node_timeout:
+
+# Regexps for files to ignore
+munin_node_ingore_files:
+  - '[\#~]$'
+  - 'DEADJOE$'
+  - '\.bak$'
+  - '%$'
+  - '\.dpkg-(tmp|new|old|dist)$'
+  - '\.rpm(save|new)$'
+  - '\.pod$'
+
+munin_node_hostname:
+
+# Define munin hosts that are allowed to access this munin node
+munin_node_hosts_allow:
+  - '^127\.0\.0\.1$'
+  - '^::1$'
+
+# Used for groups
+# munin_node_cidr:
+
+munin_node_host: '*'
+
+munin_node_port: 4949
+
+munin_node_config: []
+
+# Plugins by default
+munin_node_plugins:
+  - name: apt_all
+    plugin_path: "/usr/share/munin/plugins/apt_all"
+  - name: cpu
+  - name: df
+  - name: if_err_eth0
+    plugin_path: "/usr/share/munin/plugins/if_err_"
+  - name: load
+  - name: postfix_mailqueue
+  - name: uptime
+  - name: users

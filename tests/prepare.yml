@@ -1,0 +1,13 @@
+---
+- hosts: all
+  remote_user: root
+
+  vars:
+    munin_configure_nginx: false
+    munin_nginx_listen: '8012'
+    munin_nginx_server_name: 'localhost'
+    munin_admin_user: munin
+    munin_admin_password: munin
+
+  roles:
+    - ansible-role-munin

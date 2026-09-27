@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: root
+
+  vars:
+    munin_node_bind_host: '127.0.0.1'
+    munin_node_bind_port: '4949'
+    munin_node_hostname: 'localhost'
+
+  roles:
+    - ansible-role-munin-node

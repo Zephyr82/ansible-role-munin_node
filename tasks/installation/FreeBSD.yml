@@ -1,0 +1,9 @@
+---
+
+- name: Ensure munin-node is installed on FreeBSD
+  community.general.pkgng:
+    pkg: "{{ munin_node_package }}"
+    state: present
+  become: true
+  tags:
+    - installation

@@ -1,0 +1,21 @@
+dependencies: []
+
+galaxy_info:
+  author: Tobias Schifftner
+  description: Installs munin-node on Debian/Ubuntu linux servers.
+  company: ambimax® GmbH
+  license: MIT
+  min_ansible_version: "2.1"
+  platforms:
+    - name: Debian
+      versions:
+        - jessie
+        - trixie
+    - name: Ubuntu
+      versions:
+        - trusty
+        - noble
+  galaxy_tags:
+    - debian
+    - ubuntu
+    - munin-node

@@ -1,0 +1,9 @@
+---
+
+- name: Ensure munin-node is installed
+  ansible.builtin.apt:
+    pkg: "{{ munin_node_package }}"
+    state: present
+  become: true
+  tags:
+    - installation

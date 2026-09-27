@@ -1,0 +1,21 @@
+---
+
+munin_node_package: munin-node
+
+# munin config directories
+munin_node_plugin_conf_dir:
+  path: "/etc/munin/plugin-conf.d"
+  owner: root
+  group: munin
+  mode: "0750"
+munin_node_conf_dir: '/etc/munin/'
+munin_node_conf_dir_group: munin
+
+#####
+# Source and destination of munin plugin files
+munin_node_plugin_dir: '/usr/share/munin/plugins/'
+munin_node_plugin_enabled_dir:
+  path: "/etc/munin/plugins/"
+  owner: root
+  group: root
+  mode: "0755"
