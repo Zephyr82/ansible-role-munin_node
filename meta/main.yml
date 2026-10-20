@@ -2,6 +2,7 @@ dependencies: []
 
 galaxy_info:
   role_name: munin_node
+  namespace: zephyr82
   author: zephyr82
   description: Installs munin-node on Debian/Ubuntu linux servers.
   company: ambimax® GmbH
