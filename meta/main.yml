@@ -1,7 +1,8 @@
 dependencies: []
 
 galaxy_info:
-  author: Tobias Schifftner
+  role_name: munin_node
+  author: zephyr82
   description: Installs munin-node on Debian/Ubuntu linux servers.
   company: ambimax® GmbH
   license: MIT
