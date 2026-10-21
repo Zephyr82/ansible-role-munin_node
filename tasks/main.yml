@@ -38,7 +38,7 @@
     group: "{{ munin_node_conf_dir_group }}"
     mode: "0644"
   become: true
-  notify: restart munin-node
+  notify: Restart munin-node
 
 - name: Get list of enabled munin plugins
   ansible.builtin.find:
@@ -88,7 +88,7 @@
   ansible.builtin.debug:
     msg:
       - "dest: {{ munin_node_plugin_enabled_dir.path }}{{ item.name }}"
-      - "src: {% if item.plugin_path is defined %}{{ item.plugin_path }}{% else %}{{ munin_node_plugin_dir }}{{ item.name }}{% endif %}"
+      - "src: {{ item.plugin_path | default([munin_node_plugin_dir, item.name] | join) }}"
   with_items: "{{ munin_node_plugins }}"
   tags:
     - debug
@@ -96,13 +96,13 @@
 - name: Enable plugins we do want/need
   ansible.builtin.file:
     dest: "{{ munin_node_plugin_enabled_dir.path }}{{ item.name }}"
-    src: "{% if item.plugin_path is defined %}{{ item.plugin_path }}{% else %}{{ munin_node_plugin_dir }}{{ item.name }}{% endif %}"
+    src: "{{ item.plugin_path | default([munin_node_plugin_dir, item.name] | join) }}"
     owner: root
     group: root
     state: link
   with_items: "{{ munin_node_plugins }}"
   become: true
-  notify: restart munin-node
+  notify: Restart munin-node
 
 - name: Ensure munin-node is running
   ansible.builtin.service:

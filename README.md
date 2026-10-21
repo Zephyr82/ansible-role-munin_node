@@ -1,8 +1,6 @@
 # Ansible Role: Install munin-node
 
-[![Build Status](https://travis-ci.org/tschifftner/ansible-role-munin-node.svg)](https://travis-ci.org/tschifftner/ansible-role-munin-node)
-
-Installs munin-node on Debian/Ubuntu linux servers.
+Installs munin-node on Debian/Ubuntu linux servers, activates specific plugins
 
 ## Requirements
 
@@ -16,7 +14,7 @@ None.
 
 More settings in ```default/main.yml```
 
-```
+```yaml
 # Using * can lead to ipv6 listening only, therefor use 0.0.0.0
 munin_node_bind_host: '0.0.0.0'
 munin_node_bind_port: '4949'
@@ -58,6 +56,26 @@ munin_node_hosts_allow_combined: '{{ (munin_node_default_hosts_allow + munin_nod
 
 munin_node_config: []
 ```
+
+The role needs a list of plugins to be enabled. It will activate the listed -and only the listed- plugins. Other plugins that might be linked in the `munin_node_plugin_dir` will be removed!
+
+List the plugins which shall be activated in the following manner:
+
+```yaml
+munin_node_plugins:
+  - name: apt_all
+  - name: cpu
+  - name: df
+  - name: if_eth0
+    plugin_path: "/usr/share/munin/plugins/if_"
+  - name: load
+  - name: postfix_mailqueue
+  - name: uptime
+  - name: users
+```
+
+Plugins outside of the standard `munin_node_plugin_dir` or wildcard plugins such as `if_` can be activates with the dict variable `plugin_path` in addition to the plugin`name`. See above like the `if_` plugin.
+
 
 ## Installation
 
