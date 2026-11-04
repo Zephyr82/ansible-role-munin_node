@@ -80,7 +80,7 @@ Plugins outside of the standard `munin_node_plugin_dir` or wildcard plugins such
 ## Installation
 
 ```
-$ ansible-galaxy install tschifftner.munin-node
+$ ansible-galaxy install git+https://github.com/zephyr82/ansible-role-munin_node
 ```
 
 ## Example Playbook
@@ -88,12 +88,13 @@ $ ansible-galaxy install tschifftner.munin-node
     - hosts: server
 
       roles:
-        - { role: tschifftner.munin-node }
+        - { role: zephyr82.munin_node }
 
 ## Supported OS
-Ansible          | Debian Jessie    | Ubuntu 14.04    | Ubuntu 16.04    |
-:--------------: | :--------------: | :-------------: | :-------------: |
-2.1              | Yes              | Yes             | Yes             |              
+| Ansible | Debian | Ubuntu |
+|:-------:|:------:|:------:|
+|   2.1   | Jessie | 14.04  |
+|  2.21   | Trixie | 26.04  |
 
 ## License
 
@@ -101,4 +102,5 @@ Ansible          | Debian Jessie    | Ubuntu 14.04    | Ubuntu 16.04    |
 
 ## Author Information
 
- - [Tobias Schifftner](https://twitter.com/tschifftner), [ambimax® GmbH](https://www.ambimax.de)
+  - [Zephyr82](https://github.com/zephyr82)
+  - [Tobias Schifftner](https://twitter.com/tschifftner), [ambimax® GmbH](https://www.ambimax.de)
