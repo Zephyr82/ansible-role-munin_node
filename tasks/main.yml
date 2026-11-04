@@ -33,7 +33,7 @@
 - name: Set munin-node configuration
   ansible.builtin.template:
     src: munin-node.conf.j2
-    dest: "{{ munin_node_conf_dir }}"
+    dest: "{{ munin_node_conf_dir }}munin-node.conf"
     owner: root
     group: "{{ munin_node_conf_dir_group }}"
     mode: "0644"
